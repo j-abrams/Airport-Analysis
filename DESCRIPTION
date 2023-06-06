@@ -1,0 +1,10 @@
+Package: AirportAnalysis
+Title: My Airport Analysis Package
+Version: 0.1.0
+Authors: 
+  James Abrams <ja11g14@soton.ac.uk>
+Description: A package for analyzing airport data.
+License: MIT
+Encoding: UTF-8
+RoxygenNote: 7.2.3
+

@@ -3,9 +3,11 @@
 
 #### Setup
 
+# 1. Load required packages
+# 2. Store hard coded variables
 
-
-# Standard
+#### Packages
+# Standard packages
 library(dplyr)  # data handling
 library(ggplot2)  # plotting
 library(lubridate)  # date formatting
@@ -18,7 +20,7 @@ library(knitr)
 
 # Package management
 library(roxygen2)
-
+library(devtools)
 
 #library(here)
 #here()

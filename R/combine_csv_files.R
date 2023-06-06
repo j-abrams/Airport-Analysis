@@ -10,7 +10,6 @@
 #' @return A data frame containing the combined data from all CSV files.
 #' @export
 #'
-#' @importFrom dplyr rbind
 #' @importFrom dplyr distinct
 #' @importFrom dplyr select
 #' @importFrom dplyr filter

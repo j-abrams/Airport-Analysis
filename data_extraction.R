@@ -1,7 +1,20 @@
 
 
 
+
+# Package setup
+
+# Initiate
 source("global.R")
+roxygen2::roxygenise()
+
+# Build the package
+devtools::build()
+
+# Install
+install.packages("C:/Users/james/OneDrive/Documents/AirportAnalysis_0.1.0.tar.gz")
+
+
 
 
 #### Data Extraction
@@ -19,21 +32,6 @@ airports <- airlabs_api_function(key = "airports") %>% select(-c(lat, lng, icao_
 airlines <- airlabs_api_function(key = "airlines")
 
 
-# Examples 4: Scheduled arrivals at LAX
-# This shows data for the next 10 hours at most.
-# Arrivals
-# scheduled_arrivals <- airlabs_api_function(key = "schedules", 
-#                                            parameter_name = "arr_iata", 
-#                                            parameter_value = "LAX") %>%
-#   distinct(dep_iata, arr_time, .keep_all = TRUE)
-# 
-# arrivals <- scheduled_arrivals %>%
-#   filter(arr_terminal == "TBIT") %>%
-#   select(all_of(fields_arrivals))
-# Example 5: Departures from LAX
-# Example 6: Delays?
-
-
 
 #### Data Handling
 
@@ -46,6 +44,9 @@ departures_lhr <- extract_departures(parameter_value = "LHR")
 
 
 write.csv(departures_lhr, "Raw_Data/LAX_departures_dd.csv", row.names = F)
+
+
+
 
 # TODO: Figure out how to use arrivals and departures combined. 
 # Departure and arrival location in to one field.
@@ -64,4 +65,27 @@ write.csv(departures_lhr, "Raw_Data/LAX_departures_dd.csv", row.names = F)
 # TODO: Peak hours bar chart - add figures for inactive hours between 1 and 5
 
 # Remember, same flight may be listed for multiple flight providers. Confusing
+
+
+
+
+
+# lab
+
+# Examples 4: Scheduled arrivals at LAX
+# This shows data for the next 10 hours at most.
+# Arrivals
+# scheduled_arrivals <- airlabs_api_function(key = "schedules", 
+#                                            parameter_name = "arr_iata", 
+#                                            parameter_value = "LAX") %>%
+#   distinct(dep_iata, arr_time, .keep_all = TRUE)
+# 
+# arrivals <- scheduled_arrivals %>%
+#   filter(arr_terminal == "TBIT") %>%
+#   select(all_of(fields_arrivals))
+# Example 5: Departures from LAX
+# Example 6: Delays?
+
+
+
 
