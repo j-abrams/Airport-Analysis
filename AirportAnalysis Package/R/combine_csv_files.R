@@ -13,6 +13,7 @@
 #' @importFrom dplyr distinct
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
+#' @importFrom dplyr bind_rows
 #' @importFrom base rownames
 #' @importFrom utils write.csv
 #'
@@ -33,7 +34,7 @@ combine_csv_files <- function(folder_path) {
   # Iterate over each CSV file and combine the data
   for (file in files) {
     data <- read.csv(file, stringsAsFactors = FALSE)
-    combined_data <- rbind(combined_data, data) %>%
+    combined_data <- bind_rows(combined_data, data) %>%
       distinct(arr_iata, dep_time, .keep_all = TRUE)
   }
   

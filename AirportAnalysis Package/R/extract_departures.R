@@ -56,7 +56,7 @@ extract_departures <- function(parameter_value) {
   current_time <- Sys.time()
   
   # Extract the hour and minute components from the current time
-  current_minute <- format(current_time, "%H%M")
+  current_minute <- format(current_time, "%d%m_%H%M")
   
   # Save the departures data
   write.csv(departures, paste0("Raw_Data/", parameter_value, "/", parameter_value,

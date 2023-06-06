@@ -34,12 +34,12 @@ api_key <- "dc7a7014-15b3-4c91-9825-51c82e96c8ff"
 # Hard coded fields to keep (41 fields reduced to 12) for arrivals
 fields_arrivals <- c("airline_iata", "airline_icao", "flight_iata", "flight_icao", "flight_number",
                      "dep_iata", "dep_icao", 
-                     "arr_iata", "arr_icao", "arr_terminal", "arr_time", "duration")
+                     "arr_iata", "arr_icao", "arr_terminal", "arr_time", "delayed", "duration")
 
 # Hard coded Fields to keep for departures
 fields_departures <- c("airline_iata", "airline_icao", "flight_iata", "flight_icao", "flight_number",
                        "dep_iata", "dep_icao", "dep_terminal", "dep_time", 
-                       "arr_iata", "arr_icao", "duration")
+                       "arr_iata", "arr_icao", "delayed", "duration")
 
 
 

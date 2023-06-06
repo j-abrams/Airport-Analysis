@@ -14,7 +14,7 @@ knitr::opts_chunk$set(message = FALSE)
 
 # Introduction
 
-This analysis focuses on the LAX departures dataset. The dataset contains information about the number of departures to different airports from Los Angeles International Airport (LAX). We will explore the top destinations and categorize them as domestic or international flights. This report focuses entirely on the Thomas Bradley terminal. 
+This analysis focuses on the {airport} departures dataset. The dataset contains information about the number of departures to different airports from {airport_name}. We will explore the top destinations and categorize them as domestic or international flights.  
 
 #### **Questions to be answered**
 
@@ -26,9 +26,9 @@ This analysis focuses on the LAX departures dataset. The dataset contains inform
 
 <section style="border-top: 1px solid black;"></section>
 
-#### **What are the most popular destinations for outgoing flights from the Thomas Brady terminal at LAX?**
+#### **What are the most popular destinations for outgoing flights from {airport_name}?**
 
-To determine the most popular destinations for outgoing flights from the Thomas Brady terminal at LAX, we have analyzed the dataset and identified the top 10 destinations based on the number of departures.
+To determine the most popular destinations for outgoing flights from {airport_name}, we have analyzed the dataset and identified the top 10 destinations based on the number of departures.
 
 
 <section style="border-top: 1px solid black;"></section>
@@ -49,8 +49,8 @@ plot_bar_chart <- function(data, x, y, lab_x, lab_y, title) {
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
 
-# Load the LAX departures data
-departures_dd <- read.csv("Raw_Data/LAX_departures_dd.csv")
+# Load the {airport} departures data
+departures_dd <- read.csv("{airport}_departures_dd.csv")
 
 # Select the top 10 airports and reorder them by number of departures
 top_airports <- departures_dd %>%
@@ -73,15 +73,15 @@ plot_bar_chart(top_airports, airport_name, top_airports,
 ```
 
 <section style="border-top: 1px solid black;"></section>  
-The bar chart above displays the top 10 most popular airport destinations based on the number of daily departures from the Thomas Brady terminal at LAX. The airports are ranked by the number of departures, with the highest number at the top.
+The bar chart above displays the top 10 most popular airport destinations based on the number of daily departures from {airport_name}. The airports are ranked by the number of departures, with the highest number at the top.
 
-As we can see from the chart, the most popular destination for outgoing flights from the Thomas Brady terminal is **`r top_airports$airport_name[1]`**, with a total of **`r top_airports$top_airports[1]`** departures.
+As we can see from the chart, the most popular destination for outgoing flights from {airport_name} is **`r top_airports$airport_name[1]`**, with a total of **`r top_airports$top_airports[1]`** departures.
 
 <section style="border-top: 1px solid black;"></section>
 
-#### **What is the proportion of Domestic flights compared to International flights leaving the terminal?**
+#### **What is the proportion of Domestic flights compared to International flights leaving the airport?**
 
-To understand the distribution of flights leaving the terminal, we have analyzed the proportion of domestic and international flights.
+To understand the distribution of flights leaving the airport, we have analysed the proportion of domestic and international flights.
 
 
 <section style="border-top: 1px solid black;"></section>
@@ -118,16 +118,16 @@ ggplot(flight_proportions, aes(x = "", y = proportion, fill = destination)) +
 
 <section style="border-top: 1px solid black;"></section>
 
-The table above shows the proportion of domestic and international flights leaving the terminal. It provides insights into the balance between domestic and international air traffic.
+The table above shows the proportion of domestic and international flights leaving the airport. It provides insights into the balance between domestic and international air traffic.
 
-As we can see, **`r round(sum(flight_proportions[flight_proportions$destination == "Domestic", "proportion"]) * 100, 2)`%** of the flights leaving the terminal are **domestic**, while **`r round(sum(flight_proportions[flight_proportions$destination == "International", "proportion"]) * 100, 2)`%** are **international**.
+As we can see, **`r round(sum(flight_proportions[flight_proportions$destination == "Domestic", "proportion"]) * 100, 2)`%** of the flights leaving the airport are **domestic**, while **`r round(sum(flight_proportions[flight_proportions$destination == "International", "proportion"]) * 100, 2)`%** are **international**.
 
 
 
 <section style="border-top: 1px solid black;"></section>
 
 
-#### **What are the top 10 most popular airlines departing the terminal?**
+#### **What are the top 10 most popular airlines departing the airport?**
 
 To analyze the popularity of airlines, we have selected the top 10 airlines based on the number of departures. The list is arranged in descending order, with the highest number of departures at the top.
 
@@ -157,7 +157,7 @@ plot_bar_chart(top_airlines, airline_name, top_airlines,
 
 <section style="border-top: 1px solid black;"></section>
 
-The bar chart above displays the top 10 most popular airlines based on the number of departures. It provides insights into the prominence of different airlines at LAX (Los Angeles International Airport).  
+The bar chart above displays the top 10 most popular airlines based on the number of departures. It provides insights into the prominence of different airlines at {airport_name}.  
 
 As we can see, the most popular airline based on the number of departures is **`r top_airlines$airline_name[1]`**, with **`r top_airlines$top_airlines[1]`** outgoing flights.
 
@@ -186,14 +186,28 @@ peak_hours <- departures_dd %>%
 # Convert timeslot to a factor with ordered levels
 peak_hours$timeslot <- factor(peak_hours$timeslot, levels = unique(peak_hours$timeslot), ordered = TRUE)
 
-# Plot the time series bar chart
-# Map busiest periods for the airport.
-ggplot(peak_hours, aes(x = timeslot, y = total)) +
+
+# Generate a data frame with all hours
+all_hours <- data.frame(timeslot = sprintf("%02d", 0:23))
+
+# Merge all_hours with peak_hours
+merged_data <- merge(all_hours, peak_hours, by = "timeslot", all.x = TRUE)
+
+# Fill missing values with 0
+merged_data$total[is.na(merged_data$total)] <- 0
+
+# Convert timeslot to a factor with ordered levels
+merged_data$timeslot <- factor(merged_data$timeslot, levels = unique(merged_data$timeslot), ordered = TRUE)
+
+# Plot the time series bar chart with adjusted x-axis labels
+ggplot(merged_data, aes(x = timeslot, y = total)) +
   geom_bar(stat = "identity", fill = "seagreen") +
-  scale_x_discrete(labels = function(x) paste0(x, ":00")) +
+  scale_x_discrete(breaks = merged_data$timeslot[seq(1, nrow(merged_data), by = 2)], 
+                   labels = function(x) paste0(x, ":00")) +
   labs(x = "Timeslot", y = "Total") +
-  ggtitle("Time Series Bar Chart Showing Airport Peak Hours by Departures per Hour") +
+  ggtitle("Time Series Bar Chart Showing Airport Peak Hours by departures per hour") +
   theme_minimal()
+
 
 ```
 
@@ -201,9 +215,9 @@ ggplot(peak_hours, aes(x = timeslot, y = total)) +
 
 The time series bar chart above illustrates the distribution of departures per hour, highlighting the busiest periods at the airport. Each bar represents a one-hour time slot, and the height of the bar represents the total number of departures during that time slot.
 
-Based on the chart, the busiest time of day for departures from the Thomas Bradley terminal at LAX is **`r paste0(peak_hours$timeslot[which.max(peak_hours$total)], ":00")`**. During this period, there is a significant surge in departures, indicating a high level of activity at the airport.
+Based on the chart, the busiest time of day for departures from {airport_name} is **`r paste0(peak_hours$timeslot[which.max(peak_hours$total)], ":00")`**. The number of flights departing at this time is: **`r peak_hours$total[which.max(peak_hours$total)]`**. During this period, there is a significant surge in departures, indicating a high level of activity at the airport.
 
-Conversely, the quietest time of day for departures is **`r paste0(peak_hours$timeslot[which.min(peak_hours$total)], ":00")`**. During this period, the number of departures is relatively low, indicating a more peaceful and less crowded environment at the airport.
+Conversely, the quietest time of day for departures is **`r paste0(peak_hours$timeslot[which.min(peak_hours$total)], ":00")`**. The number of flights departing at this time is: **`r peak_hours$total[which.min(peak_hours$total)]`**. During this period, the number of departures is relatively low, indicating a more peaceful and less crowded environment at the airport.
 
 <section style="border-top: 1px solid black;"></section>
 

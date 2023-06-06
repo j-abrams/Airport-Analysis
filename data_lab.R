@@ -84,15 +84,24 @@ peak_hours <- LAX_departures_dd %>%
 # Convert timeslot to a factor with ordered levels
 peak_hours$timeslot <- factor(peak_hours$timeslot, levels = unique(peak_hours$timeslot), ordered = TRUE)
 
+# Generate a data frame with all hours
+all_hours <- data.frame(timeslot = sprintf("%02d", 0:23))
 
-# Plot the time series bar chart
-# Map busiest periods for the airport.
-ggplot(peak_hours, aes(x = timeslot, y = total)) +
+# Merge all_hours with peak_hours
+merged_data <- merge(all_hours, peak_hours, by = "timeslot", all.x = TRUE)
+
+# Fill missing values with 0
+merged_data$total[is.na(merged_data$total)] <- 0
+
+# Convert timeslot to a factor with ordered levels
+merged_data$timeslot <- factor(merged_data$timeslot, levels = unique(merged_data$timeslot), ordered = TRUE)
+
+# Plot the time series bar chart with adjusted x-axis labels
+ggplot(merged_data, aes(x = timeslot, y = total)) +
   geom_bar(stat = "identity", fill = "seagreen") +
-  scale_x_discrete(labels = function(x) paste0(x, ":00")) +
+  scale_x_discrete(breaks = merged_data$timeslot[seq(1, nrow(merged_data), by = 2)], 
+                   labels = function(x) paste0(x, ":00")) +
   labs(x = "Timeslot", y = "Total") +
   ggtitle("Time Series Bar Chart Showing Airport Peak Hours by departures per hour") +
   theme_minimal()
-
-
 
