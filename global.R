@@ -11,6 +11,7 @@
 library(dplyr)  # data handling
 library(ggplot2)  # plotting
 library(lubridate)  # date formatting
+library(stats)
 
 # Markdown operations
 library(httr)

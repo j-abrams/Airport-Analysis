@@ -14,7 +14,6 @@
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
 #' @importFrom dplyr bind_rows
-#' @importFrom base rownames
 #' @importFrom utils write.csv
 #'
 #' @examples
