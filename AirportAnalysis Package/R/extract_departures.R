@@ -3,7 +3,8 @@
 
 #' Extract departures
 #'
-#' This function performs data extraction, handling, and deep dive analysis on scheduled departures data for a specific airport.
+#' This function performs data extraction, handling, and deep dive analysis on scheduled departures data
+#' for a specific airport.
 #'
 #' @param parameter_value The airport code for which to extract and analyze data.
 #'
@@ -29,20 +30,22 @@
 # Nested function contains previous steps compiled into one to return one output: departures_dd
 
 # parameter_value" denotes airport code, for example "LAX"
-# parameter_value <- "LAX"
+# parameter_value <- "YYZ"
 extract_departures <- function(parameter_value) {
   
   # Data Extraction
-  scheduled_departures <- airlabs_api_function(key = "schedules", 
-                                               parameter_name = "dep_iata", 
-                                               parameter_value = parameter_value) %>%
+  scheduled_departures <- get_airlabs_api_response(key = "schedules", 
+                                                   parameter_name = "dep_iata", 
+                                                   parameter_value = parameter_value) %>%
     distinct(arr_iata, dep_time, .keep_all = TRUE)
   
   # Data Handling
   
   departures <- scheduled_departures %>%
-    select(all_of(fields_departures))
-  
+    select(all_of(fields_departures)) %>%
+    mutate(flight_number = as.numeric(flight_number)) %>%  # Quick fix for flight_number field
+    filter(!is.na(flight_number))
+    
   # Filter only for Thomas Bradley terminal in the event where we are observing LAX
   if (parameter_value == "LAX") {
     departures <- departures %>%

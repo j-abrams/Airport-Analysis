@@ -13,7 +13,8 @@ extract_departures(parameter_value)
 A data frame containing the deep dive analysis results for the specified airport.
 }
 \description{
-This function performs data extraction, handling, and deep dive analysis on scheduled departures data for a specific airport.
+This function performs data extraction, handling, and deep dive analysis on scheduled departures data
+for a specific airport.
 }
 \examples{
 # Extract and analyze data for LAX airport

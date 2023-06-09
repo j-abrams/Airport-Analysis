@@ -24,6 +24,7 @@ A bar chart plot.
 }
 \description{
 This function creates a bar chart using the ggplot2 package.
+Plots top airlines and top destinations
 }
 \examples{
 # Create a bar chart

@@ -13,7 +13,7 @@
 
 
 analyse_delays <- function(directory, threshold) {
-  delays <- delays_function(directory, threshold)
+  delays <- get_delays(directory, threshold)
   
   test <- delays[[3]] %>%
     group_by(airline_iata) %>%

@@ -14,7 +14,6 @@
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
 #' @importFrom dplyr bind_rows
-#' @importFrom utils write.csv
 #'
 #' @examples
 #' # Combine CSV files from a folder

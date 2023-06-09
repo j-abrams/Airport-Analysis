@@ -12,6 +12,7 @@ library(dplyr)  # data handling
 library(ggplot2)  # plotting
 library(lubridate)  # date formatting
 library(stats)
+library(tidyr)
 
 # Markdown operations
 library(httr)

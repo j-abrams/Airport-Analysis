@@ -5,6 +5,7 @@
 #' Plot Bar Chart
 #'
 #' This function creates a bar chart using the ggplot2 package.
+#' Plots top airlines and top destinations
 #'
 #' @param data The data frame containing the data to plot.
 #' @param x The variable to use for the x-axis.
