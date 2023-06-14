@@ -27,31 +27,37 @@ plot_donut_chart <- function(percentage_df, title) {
     summarise(Percentage = sum(Percentage), Flights = sum(Flights)) %>%
     mutate(Category = factor(Category, levels = c("Within_15_Mins", "Late")))
   
+  
   donut_chart <- ggplot(percentage_df, aes(x = "", y = Percentage, fill = Category)) +
     geom_bar(width = 1, stat = "identity", color = "white") +
     coord_polar("y", start = 0) +
-    #geom_text(aes(label = Flights),
-    #          position = position_stack(vjust = 0.5),
-    #          hjust = 1,
-    #          color = "black",
-    #          size = 4) +
     scale_fill_manual(values = case_when(
-      percentage_df$Percentage[2] > 70 ~ c("#98FB98", "lightgrey"),
-      percentage_df$Percentage[2] > 60 ~ c("#FFD700", "lightgrey"),
-      TRUE ~ c("#FF8C8C","lightgrey")
+      percentage_df$Percentage[2] > 70 ~ c("#98FB98", "white"),
+      percentage_df$Percentage[2] > 60 ~ c("#FFD700", "white"),
+      TRUE ~ c("#FF8C8C","white")
     )) +
     labs(title = paste("Percentage of Flight", title, "Within 15 Minutes, and Late"),
          x = NULL, y = NULL) +
     theme_void() +
-    geom_polygon(data = data.frame(x = c(-0.1, 0.1), y = c(-Inf, -Inf)), aes(x, y), fill = "white") +
     geom_hline(yintercept = c(40, 30), color = "blue", linetype = "dashed", size = 1) +
     geom_hline(yintercept = 0, color = "black", linetype = "solid", size = 1) +
+    geom_point(x = -1, y = 0, shape = 21, fill = "white", size = 75) +
     geom_text(data = data.frame(y = c(40, 30), label = paste0(" ", c(60, 70), "%")),
               aes(x = 1.75, y = y, label = label),
               inherit.aes = FALSE,
               hjust = 0,
               color = "black",
-              size = 4)
+              size = 4) +
+    annotate("text", x = -1, y = 0, label = paste0(round(percentage_df$Percentage[2], 0), "%"), size = 17.5, 
+             color = case_when(
+               percentage_df$Percentage[2] > 70 ~ c("#98FB98"),
+               percentage_df$Percentage[2] > 60 ~ c("#FFD700"),
+               TRUE ~ c("#FF8C8C")
+             )) +
+    guides(fill = FALSE)
+  
+  
+  
   
   print(donut_chart)
   return(donut_chart)

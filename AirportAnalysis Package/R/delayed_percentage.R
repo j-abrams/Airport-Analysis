@@ -32,12 +32,16 @@ delayed_percentage <- function(data, terminal_type) {
     data <- data %>%
       rename("terminal" = "dep_terminal") %>%
       rename("actual" =  "dep_actual") %>%
-      rename("time" = "dep_time")
+      rename("time" = "dep_time") %>%
+      mutate(actual = as.POSIXct(actual)) %>%
+      mutate(time = as.POSIXct(time))
   } else if (terminal_type == "arr") {
     data <- data %>%
       rename("terminal" = "arr_terminal")%>%
       rename("actual" =  "arr_actual") %>%
-      rename("time" = "arr_time")
+      rename("time" = "arr_time") %>%
+      mutate(actual = as.POSIXct(actual)) %>%
+      mutate(time = as.POSIXct(time))
   }
   
   # Use dplyr::summarise and tidyr::pivot_longer
@@ -70,8 +74,9 @@ delayed_percentage <- function(data, terminal_type) {
                           round(cumsum(Percentage), 0),
                           round(Percentage, 0))
     ) %>%
-    ungroup()  # Add this line to remove grouping after calculations
-  
+    ungroup() %>% # Add this line to remove grouping after calculations 
+    mutate(Percentage = round(Percentage, 2))
+           
   return(percentage_df)
   
 }

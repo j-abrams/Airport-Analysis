@@ -4,7 +4,7 @@
 \alias{combine_csv_files}
 \title{Combine CSV Files}
 \usage{
-combine_csv_files(folder_path)
+combine_csv_files(folder_path, type = "departures")
 }
 \arguments{
 \item{folder_path}{The path to the folder containing the CSV files.}

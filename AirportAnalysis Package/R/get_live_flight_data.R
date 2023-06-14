@@ -19,6 +19,9 @@
 #' @export
 
 
+
+
+
 # Current Performance Metrics
 # Return listings for which departure / arrivals actuals are already know.
 
@@ -31,23 +34,39 @@ get_live_flight_data <- function(flight_type, airport) {
                                      parameter_value = airport) %>%
       distinct(arr_iata, dep_time, .keep_all = TRUE) %>%
       select(airline_iata, 
-             dep_iata, dep_terminal, dep_time, dep_time_utc, dep_actual, 
-             arr_iata, arr_terminal, arr_time, arr_time_utc, arr_actual,
+             dep_iata, dep_terminal, dep_time, #dep_actual,
+             dep_actual = dep_estimated, 
+             arr_iata, #arr_time, arr_actual,
              delayed) %>%
       filter(!is.na(dep_actual))
+    
+    # Convert dep_actual and dep_time to POSIXct format
+    data$dep_actual <- as.POSIXct(data$dep_actual)
+    data$dep_time <- as.POSIXct(data$dep_time)
+    
   } else if (flight_type == "arrivals") {
     data <- get_airlabs_api_response(key = "schedules", 
                                      parameter_name = "arr_iata", 
                                      parameter_value = airport) %>%
       distinct(arr_iata, dep_time, .keep_all = TRUE) %>%
       select(airline_iata, 
-             dep_iata, dep_terminal, dep_time, dep_time_utc, dep_actual, 
-             arr_iata, arr_terminal, arr_time, arr_time_utc, arr_actual,
+             dep_iata, dep_time, dep_time_utc, dep_actual, 
+             arr_iata, arr_terminal, arr_time, arr_time_utc, #arr_actual,
+             arr_actual = arr_estimated,
              delayed) %>%
       filter(!is.na(arr_actual))
+    
+    data$arr_actual <- as.POSIXct(data$arr_actual)
+    data$arr_time <- as.POSIXct(data$arr_time)
+      
   } else {
     stop("Invalid flight type. Please specify 'departures' or 'arrivals'.")
   }
+  
+  
+  # Collect data then combine as before?
+  # get_airlabs_api_response() is only able to return a small window of actual dep and arr times.
+
   
   data <- data %>%
     filter(!is.na(airline_iata)) %>%
@@ -59,12 +78,37 @@ get_live_flight_data <- function(flight_type, airport) {
     dplyr::rename("airport_name" = "name.x", "airline_name" = "name.y") %>%
     select(airline_name, airport_name, everything())
   
-  # Convert dep_actual and dep_time to POSIXct format
-  data$dep_actual <- as.POSIXct(data$dep_actual)
-  data$dep_time <- as.POSIXct(data$dep_time)
-  data$arr_actual <- as.POSIXct(data$arr_actual)
-  data$arr_time <- as.POSIXct(data$arr_time)
   
-  return(data)
+  
+  
+  # Add system time suffix to file name to remember timestamp
+  current_time <- Sys.time()
+  
+  # Extract the hour and minute components from the current time
+  current_minute <- format(current_time, "%d%m_%H%M")
+  
+  # Save the departures data
+  
+  # shinyapps.io
+  #data_full <- bind_rows(combined_data, data) %>%
+  #  distinct(.keep_all = TRUE)
+  
+  
+  # legacy commands
+
+  # SHINY
+  
+  #write.csv(data, paste0("Data/", flight_type, "/YYZ_", flight_type, "_", current_minute, ".csv"), row.names = FALSE)
+  #data_full <- combine_csv_files(paste0("Data/", flight_type), type = "delays")
+
+  # LOCAL ENV
+  
+  write.csv(data, paste0("Shiny/Data/", flight_type, "/YYZ_", flight_type, "_", current_minute, ".csv"), row.names = FALSE)
+  data_full <- combine_csv_files(paste0("Shiny/Data/", flight_type), type = "delays")
+
+  print(nrow(data_full))
+  
+  return(data_full)
+  #return(data)
 }
 

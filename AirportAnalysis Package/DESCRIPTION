@@ -7,4 +7,4 @@ Description: A package for analyzing airport data.
 License: MIT
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-
+LazyData: true

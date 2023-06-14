@@ -66,8 +66,8 @@ extract_departures <- function(parameter_value) {
                                "_departures_", current_minute, ".csv"), row.names = FALSE)
   
   
-  departures_full <- combine_csv_files(paste0("Raw_Data/", parameter_value))
-  print(nrow(departures_full ))
+  departures_full <- combine_csv_files(paste0("Raw_Data/", parameter_value), type = "departures")
+  print(nrow(departures_full))
   
   # Departures Deep Dive
   # top_airlines and top_airports fields determine the most popular airlines and airports respectively
