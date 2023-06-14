@@ -422,8 +422,4 @@ This chart shows the proportion of flights delayed for the worst performing airl
 
 <section style="border-top: 1px solid black;"></section>
 
-![](departures_plot.png)
-<section style="border-top: 1px solid black;"></section>
-
-![](arrivals_plot.png)
 

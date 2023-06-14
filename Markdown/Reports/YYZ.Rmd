@@ -418,9 +418,8 @@ This chart shows the proportion of flights delayed for the worst performing airl
 
 <section style="border-top: 1px solid black;"></section>
 
-
 #### **Live Flight Data - proportion of flights running on time**
 
-![](departures_plot.png)
-![](arrivals_plot.png)
+<section style="border-top: 1px solid black;"></section>
+
 
