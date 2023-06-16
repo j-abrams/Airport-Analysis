@@ -3,4 +3,6 @@
 .RData
 .Ruserdata
 Shiny/Data
-Raw/Data
+Raw_Data
+Markdown/Data
+Markdown/Reports

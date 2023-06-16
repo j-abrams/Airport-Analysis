@@ -32,13 +32,36 @@ get_live_flight_data <- function(flight_type, airport) {
     data <- get_airlabs_api_response(key = "schedules", 
                                      parameter_name = "dep_iata", 
                                      parameter_value = airport) %>%
-      distinct(arr_iata, dep_time, .keep_all = TRUE) %>%
+      
+      #filter(flight_number == cs_flight_number) %>%
+      #distinct(arr_iata, dep_time, .keep_all = TRUE) %>%
+    
+      
+      group_by(arr_iata, dep_time) %>%
+      mutate(row_to_keep = case_when(
+        any(flight_number == cs_flight_number) ~ which(flight_number == cs_flight_number)[1],
+        TRUE ~ 1
+      )) %>%
+      filter(row_number() == row_to_keep) %>%
+      select(-row_to_keep) %>%
+      
+      # If running pre - 11am dep_actuals will be empty, so we will need a placeholder before calling select
+      mutate(dep_actual = ifelse(exists("dep_actual"), dep_actual, NA)) %>%
+      
+      #arrange(arr_iata, dep_time) %>%
+      #group_by(arr_iata, dep_time) %>%
+      #filter(ifelse(n() > 1, flight_number == cs_flight_number, TRUE)) %>%
+      
       select(airline_iata, 
-             dep_iata, dep_terminal, dep_time, #dep_actual,
-             dep_actual = dep_estimated, 
+             dep_iata, dep_terminal, dep_time, dep_actual,
+             dep_estimated, 
              arr_iata, #arr_time, arr_actual,
              delayed) %>%
-      filter(!is.na(dep_actual))
+      
+      # Take dep_estimated by default if dep_actual does not exist
+      mutate(dep_actual = ifelse(is.na(dep_actual), dep_estimated, dep_actual)) %>%
+      
+      filter(!is.na(dep_actual)) 
     
     # Convert dep_actual and dep_time to POSIXct format
     data$dep_actual <- as.POSIXct(data$dep_actual)
@@ -48,12 +71,33 @@ get_live_flight_data <- function(flight_type, airport) {
     data <- get_airlabs_api_response(key = "schedules", 
                                      parameter_name = "arr_iata", 
                                      parameter_value = airport) %>%
-      distinct(arr_iata, dep_time, .keep_all = TRUE) %>%
-      select(airline_iata, 
+      
+      
+      group_by(dep_iata, arr_time) %>%
+      mutate(row_to_keep = case_when(
+        any(flight_number == cs_flight_number) ~ which(flight_number == cs_flight_number)[1],
+        TRUE ~ 1
+      )) %>%
+      filter(row_number() == row_to_keep) %>%
+      select(-row_to_keep) %>%
+      
+      # If running pre - 11am dep_actuals will be empty, so we will need a placeholder before calling select
+      mutate(arr_actual = ifelse(exists("arr_actual"), arr_actual, NA)) %>%
+      
+      #arrange(dep_iata, arr_time) %>%
+      #group_by(dep_iata, arr_time) %>%
+      #filter(ifelse(n() > 1, flight_number == cs_flight_number, TRUE)) %>%
+      
+      #filter(flight_number == cs_flight_number) %>%
+      #distinct(arr_iata, dep_time, .keep_all = TRUE) %>%
+      dplyr::select(airline_iata, 
              dep_iata, dep_time, dep_time_utc, dep_actual, 
-             arr_iata, arr_terminal, arr_time, arr_time_utc, #arr_actual,
-             arr_actual = arr_estimated,
+             arr_iata, arr_terminal, arr_time, arr_time_utc, arr_actual,
+             arr_estimated,
              delayed) %>%
+      
+      mutate(arr_actual = ifelse(is.na(arr_actual), arr_estimated, arr_actual)) %>%
+      
       filter(!is.na(arr_actual))
     
     data$arr_actual <- as.POSIXct(data$arr_actual)
@@ -99,12 +143,14 @@ get_live_flight_data <- function(flight_type, airport) {
   # SHINY
   
   #write.csv(data, paste0("Data/", flight_type, "/YYZ_", flight_type, "_", current_minute, ".csv"), row.names = FALSE)
-  #data_full <- combine_csv_files(paste0("Data/", flight_type), type = "delays")
+  #data_full <- combine_csv_files(paste0("Data/", flight_type), type = "delays") %>%
+  #select(-X)
 
   # LOCAL ENV
   
   write.csv(data, paste0("Shiny/Data/", flight_type, "/YYZ_", flight_type, "_", current_minute, ".csv"), row.names = FALSE)
-  data_full <- combine_csv_files(paste0("Shiny/Data/", flight_type), type = "delays")
+  data_full <- combine_csv_files(paste0("Shiny/Data/", flight_type), type = "delays") %>%
+    select(-X)
 
   print(nrow(data_full))
   

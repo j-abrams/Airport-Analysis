@@ -4,7 +4,7 @@
 \alias{extract_departures}
 \title{Extract departures}
 \usage{
-extract_departures(parameter_value)
+extract_departures(parameter_value, date = NULL)
 }
 \arguments{
 \item{parameter_value}{The airport code for which to extract and analyze data.}

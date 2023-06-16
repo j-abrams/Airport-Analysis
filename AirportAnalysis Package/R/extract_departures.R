@@ -31,13 +31,16 @@
 
 # parameter_value" denotes airport code, for example "LAX"
 # parameter_value <- "YYZ"
-extract_departures <- function(parameter_value) {
+extract_departures <- function(parameter_value, date = NULL) {
   
   # Data Extraction
   scheduled_departures <- get_airlabs_api_response(key = "schedules", 
                                                    parameter_name = "dep_iata", 
                                                    parameter_value = parameter_value) %>%
+    #filter(flight_number == cs_flight_number)
     distinct(arr_iata, dep_time, .keep_all = TRUE)
+  
+  
   
   # Data Handling
   
@@ -66,8 +69,17 @@ extract_departures <- function(parameter_value) {
                                "_departures_", current_minute, ".csv"), row.names = FALSE)
   
   
+  # call combine_csv_files
+  # bit scrappy but type argument will initiate a conditional in the function we need.
   departures_full <- combine_csv_files(paste0("Raw_Data/", parameter_value), type = "departures")
   print(nrow(departures_full))
+  
+  # Add date argument functionality
+  if (!is.null(date)) {
+    departures_full <- departures_full %>%
+      filter(str_detect(dep_time, paste0("^", date)))
+  }
+  
   
   # Departures Deep Dive
   # top_airlines and top_airports fields determine the most popular airlines and airports respectively

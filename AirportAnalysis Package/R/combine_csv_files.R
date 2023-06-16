@@ -41,28 +41,57 @@ combine_csv_files <- function(folder_path, type = "departures") {
     
   } else if (type == "delays") {
     
-    # Remove duplicates and redundant data making use of the lag() function, and distinct()
-    if (folder_path == "Data/departures" | folder_path == "Shiny/Data/departures") {
     
-      for (file in files) {
-        data <- read.csv(file, stringsAsFactors = FALSE)
-        combined_data <- bind_rows(combined_data, data) %>%
-          distinct(.keep_all = TRUE) %>%
-          arrange(dep_time, airport_name) %>%
-          filter(airport_name != lag(airport_name, default = "")) %>%
-          filter(!is.na(airport_name))
-      }
-    } else if (folder_path == "Data/arrivals" | folder_path == "Shiny/Data/arrivals") {
-      
-      for (file in files) {
-        data <- read.csv(file, stringsAsFactors = FALSE)
-        combined_data <- bind_rows(combined_data, data) %>%
-          distinct(.keep_all = TRUE) %>%
-          arrange(dep_time, dep_iata) %>%
-          filter(dep_iata != lag(dep_iata, default = "")) %>%
-          filter(!is.na(dep_iata))
-      }
+    # Iterate over each CSV file and combine the data
+    for (file in files) {
+      data <- read.csv(file, stringsAsFactors = FALSE) %>%
+        mutate(file = file)
+      combined_data <- bind_rows(combined_data, data)
     }
+    
+    # Remove duplicates and redundant data based on "dep_time" and "airport_name"
+    if (folder_path == "Data/departures" | folder_path == "Shiny/Data/departures") {
+      combined_data <- combined_data %>%
+        arrange(dep_time, airport_name, desc(file)) %>%
+        distinct(dep_time, airport_name, .keep_all = TRUE)
+    }
+    
+    # Remove duplicates and redundant data based on "dep_time" and "airport_name"
+    if (folder_path == "Data/arrivals" | folder_path == "Shiny/Data/arrivals") {
+      combined_data <- combined_data %>%
+        arrange(arr_time, dep_iata, desc(file)) %>%
+        distinct(arr_time, dep_iata, .keep_all = TRUE)
+    }
+    
+    
+    # Reset the row names
+    rownames(combined_data) <- NULL
+    
+    
+    # Remove duplicates and redundant data making use of the lag() function, and distinct()
+    # if (folder_path == "Data/departures" | folder_path == "Shiny/Data/departures") {
+    #   
+    #   for (file in files) {
+    #     data <- read.csv(file, stringsAsFactors = FALSE)
+    #     combined_data <- bind_rows(combined_data, data) %>%
+    #       distinct(.keep_all = TRUE) %>%
+    #       arrange(dep_time, airport_name) %>%
+    #       filter(airport_name != lag(airport_name, default = "")) %>%
+    #       filter(!is.na(airport_name))
+    #   }
+    # } else 
+    
+    # if (folder_path == "Data/arrivals" | folder_path == "Shiny/Data/arrivals") {
+    #   
+    #   for (file in files) {
+    #     data <- read.csv(file, stringsAsFactors = FALSE)
+    #     combined_data <- bind_rows(combined_data, data) %>%
+    #       distinct(.keep_all = TRUE) %>%
+    #       arrange(dep_time, dep_iata) %>%
+    #       filter(dep_iata != lag(dep_iata, default = "")) %>%
+    #       filter(!is.na(dep_iata))
+    #   }
+    # }
       
       
   }

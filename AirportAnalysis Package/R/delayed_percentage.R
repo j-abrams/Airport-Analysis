@@ -33,21 +33,23 @@ delayed_percentage <- function(data, terminal_type) {
       rename("terminal" = "dep_terminal") %>%
       rename("actual" =  "dep_actual") %>%
       rename("time" = "dep_time") %>%
-      mutate(actual = as.POSIXct(actual)) %>%
-      mutate(time = as.POSIXct(time))
+      mutate(actual = as.POSIXct(actual, format = "%Y-%m-%d %H:%M:%S")) %>%
+      mutate(time = as.POSIXct(time, format = "%Y-%m-%d %H:%M:%S")) %>%
+      filter(!is.na(actual))
   } else if (terminal_type == "arr") {
     data <- data %>%
       rename("terminal" = "arr_terminal")%>%
       rename("actual" =  "arr_actual") %>%
       rename("time" = "arr_time") %>%
       mutate(actual = as.POSIXct(actual)) %>%
-      mutate(time = as.POSIXct(time))
+      mutate(time = as.POSIXct(time)) %>%
+      filter(!is.na(actual))
   }
   
   # Use dplyr::summarise and tidyr::pivot_longer
   percentage_df <- data %>%
     #group_by(terminal) %>%
-    summarise(
+    dplyr::summarise(
       On_Time = sum(is.na(delayed)) / n() * 100,
       Within_15_Minutes = sum(actual - time <= 15) / n() * 100 - On_Time,
       Late = 100 - On_Time - Within_15_Minutes,
