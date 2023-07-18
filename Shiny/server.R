@@ -3,8 +3,10 @@
 
 
 # TODO:
-# - Tidy input files into one "combined"
-# - Change the way "actuals" and "estimated" are calculated...
+# - Tidy input files into one "combined" - DONE
+# - Change the way "actuals" and "estimated" are calculated... - DONE
+#     Row 61 and Row 99 in get_live_flight_data
+#     Need to add a condition to only complete the replacement where time < live time
 # - Automate data collection now I have new laptop...
 
 

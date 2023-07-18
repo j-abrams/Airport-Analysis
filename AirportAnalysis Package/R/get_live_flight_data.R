@@ -20,12 +20,25 @@
 
 
 
-
+flight_type <- "departures"
+airport <- "YYZ"
 
 # Current Performance Metrics
 # Return listings for which departure / arrivals actuals are already know.
 
 get_live_flight_data <- function(flight_type, airport) {
+  
+  
+  # Set the time zone to Toronto
+  Sys.setenv(TZ = "America/Toronto")
+  
+  # Get the current time in Toronto
+  current_time <- Sys.time()
+  
+  # Format the current time
+  formatted_time <- format(current_time, "%Y-%m-%d %H:%M")
+  
+  
   
   # Conditional to accomodate for either departures or arrivals
   if (flight_type == "departures") {
@@ -59,7 +72,8 @@ get_live_flight_data <- function(flight_type, airport) {
              delayed) %>%
       
       # Take dep_estimated by default if dep_actual does not exist
-      mutate(dep_actual = ifelse(is.na(dep_actual), dep_estimated, dep_actual)) %>%
+      mutate(dep_actual = ifelse(is.na(dep_actual) & dep_estimated < formatted_time,
+                                 dep_estimated, dep_actual)) %>%
       
       filter(!is.na(dep_actual)) 
     
@@ -96,7 +110,8 @@ get_live_flight_data <- function(flight_type, airport) {
              arr_estimated,
              delayed) %>%
       
-      mutate(arr_actual = ifelse(is.na(arr_actual), arr_estimated, arr_actual)) %>%
+      mutate(arr_actual = ifelse(is.na(arr_actual) & arr_estimated < formatted_time,
+                                 arr_estimated, arr_actual))%>%
       
       filter(!is.na(arr_actual))
     
