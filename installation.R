@@ -3,6 +3,11 @@
 #
 # STILL
 # TODO:
+
+# Assess performance - super slow loading, add spinners for loading process.
+
+# Investigate No Record (Terminals)
+# Add a Download button? downloads departures_dd()
 #
 # FLight code, how to pick up the right one 
 # At the minute it is picking up the first one in alphabetical order
@@ -60,8 +65,7 @@ airport <- "YYZ"
 #This is filtering too much I think.
 #filter(flight_number == cs_flight_number) 
 
-departures_dd <- get_live_flight_data("departures", "YYZ") 
-# %>% filter(str_detect(dep_time, "^2023-06-15"))
+departures_dd <- get_live_flight_data("departures", "YYZ")
 
 # Mutate dep_actual to equal dep_time if dep_estimated doesnt exist? Not sure.
 #  mutate(dep_actual = ifelse(is.na(dep_actual), dep_estimated, dep_actual)) %>%
@@ -139,8 +143,11 @@ joined <- bind_rows(data1, data2)  %>%
 
 # Markdown bug - low priority
 
+parameter_value <- "YYZ"
+
 # Select one day worth of data
-departures_lax <- extract_departures(parameter_value = "LAX", date = "2023-06-16") 
+departures_lax <- extract_departures(parameter_value = "LAX", date = "2023-06-23") 
+
 
 departures_yyz <- extract_departures(parameter_value = "YYZ", date = "2023-06-14") 
 

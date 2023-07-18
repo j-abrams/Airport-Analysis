@@ -42,7 +42,9 @@ conflicts_prefer(dplyr::lag)
 #### Hard Coded variables
 
 # API Key hard coded
-api_key <- "46ef7ea8-4b01-48a3-8377-f621ae7c0b60"
+#api_key <- "46ef7ea8-4b01-48a3-8377-f621ae7c0b60"
+
+api_key <- "ab78f260-9737-4847-9ee8-d663e76f23c9"
 
 # Hard coded fields to keep (41 fields reduced to 12) for arrivals
 fields_arrivals <- c("airline_iata", "airline_icao", "flight_iata", "flight_icao", "flight_number",

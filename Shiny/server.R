@@ -1,5 +1,13 @@
 
 
+
+
+# TODO:
+# - Tidy input files into one "combined"
+# - Change the way "actuals" and "estimated" are calculated...
+# - Automate data collection now I have new laptop...
+
+
 # read.csv("Shiny/Data/departures/YYZ_departures_1206_1802.csv")
 # 
 # date <- "2023-06-12"
