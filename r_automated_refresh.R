@@ -1,6 +1,8 @@
 
 
 
+source("AirportAnalysis Package/R/get_live_flight_data.R")
+
 
 # Define your code here
 my_code <- function() {
@@ -10,7 +12,7 @@ my_code <- function() {
 
 
 # Define the interval in seconds (20 minutes = 1200 seconds)
-interval <- 1200
+interval <- 1800
 
 
 # Run the code repeatedly

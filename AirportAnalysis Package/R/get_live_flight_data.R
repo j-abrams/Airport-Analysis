@@ -110,9 +110,9 @@ get_live_flight_data <- function(flight_type, airport) {
              arr_estimated,
              delayed) %>%
       
+      # Take arr_estimated by default if arr_actual does not exist
       mutate(arr_actual = ifelse(is.na(arr_actual) & arr_estimated < formatted_time,
-                                 arr_estimated, arr_actual))%>%
-      
+                                 arr_estimated, arr_actual)) %>%
       filter(!is.na(arr_actual))
     
     data$arr_actual <- as.POSIXct(data$arr_actual)
@@ -125,7 +125,6 @@ get_live_flight_data <- function(flight_type, airport) {
   
   # Collect data then combine as before?
   # get_airlabs_api_response() is only able to return a small window of actual dep and arr times.
-
   
   data <- data %>%
     filter(!is.na(airline_iata)) %>%
@@ -136,8 +135,6 @@ get_live_flight_data <- function(flight_type, airport) {
     select(-c(country_code.x, country_code.y, name, icao_code)) %>%
     dplyr::rename("airport_name" = "name.x", "airline_name" = "name.y") %>%
     select(airline_name, airport_name, everything())
-  
-  
   
   
   # Add system time suffix to file name to remember timestamp
@@ -152,24 +149,21 @@ get_live_flight_data <- function(flight_type, airport) {
   #data_full <- bind_rows(combined_data, data) %>%
   #  distinct(.keep_all = TRUE)
   
-  
-  # legacy commands
 
-  # SHINY
-  
-  #write.csv(data, paste0("Data/", flight_type, "/YYZ_", flight_type, "_", current_minute, ".csv"), row.names = FALSE)
-  #data_full <- combine_csv_files(paste0("Data/", flight_type), type = "delays") %>%
-  #select(-X)
 
   # LOCAL ENV
   
-  write.csv(data, paste0("Shiny/Data/", flight_type, "/YYZ_", flight_type, "_", current_minute, ".csv"), row.names = FALSE)
+  write.csv(data, paste0("Shiny/Data/", flight_type, "/YYZ_", flight_type, "_", current_minute, ".csv"),
+            row.names = FALSE)
   data_full <- combine_csv_files(paste0("Shiny/Data/", flight_type), type = "delays") %>%
     select(-X)
 
   print(nrow(data_full))
-  
   return(data_full)
-  #return(data)
+  
 }
+
+
+
+
 

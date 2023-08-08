@@ -20,8 +20,8 @@
 
 update_markdown <- function(airport_names) {
   # Read the Markdown script
-  in_path <- "Markdown/Reports/template.Rmd"
-  out_path <- paste0("Markdown/Reports/", airport_names[1], ".Rmd")
+  in_path <- "AirportAnalysis Markdown/Reports/template.Rmd"
+  out_path <- paste0("AirportAnalysis Markdown/Reports/", airport_names[1], ".Rmd")
   
   markdown_script <- readLines(in_path)
   

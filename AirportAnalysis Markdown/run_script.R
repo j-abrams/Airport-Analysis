@@ -17,11 +17,51 @@ for (airport_names in airport_names_list) {
 
 
 
+
+#### Data Handling
+# For markdown purposes
+# Live Reporting
+
+# Now we have the arrivals and departures data we need, let's carry out some more focused analysis
+# Remember, same flight may be listed for multiple flight providers. Confusing & problematic.
+# Use extract_departures() function - Uses str_detect() to filter on individual days.
+# Remember, only shows 10 Hour period
+
+# Markdown bug - low priority
+
+parameter_value <- "YYZ"
+
+# Select one day worth of data
+departures_lax <- extract_departures(parameter_value = "LAX", date = "2023-08-08") 
+
+departures_yyz <- extract_departures(parameter_value = "YYZ", date = "2023-08-08") 
+
+departures_lhr <- extract_departures(parameter_value = "LHR", date = "2023-08-08") 
+
+
+#parameter_value = "LHR" 
+#date = "2023-06-14"
+
+
+
+# Write output to Markdown location for use in our AI genertaed reports
+write.csv(departures_lax, "Markdown/Data/LAX_departures_dd.csv", row.names = F)
+write.csv(departures_yyz, "Markdown/Data/YYZ_departures_dd.csv", row.names = F)
+write.csv(departures_lhr, "Markdown/Data/LHR_departures_dd.csv", row.names = F)
+
+
+
+
+
+
+
+
+
 #### Extension
 # Use RegEx operations to complete word count and estimate reading time
 
 # Read the Markdown document
-markdown_document <- readLines("Markdown/Reports/template.Rmd")
+markdown_document <- readLines("AirportAnalysis Markdown/Reports/template.Rmd")
 
 # Combine all lines into a single string
 document_text <- paste(markdown_document, collapse = " ")

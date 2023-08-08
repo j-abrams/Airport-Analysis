@@ -30,7 +30,7 @@
 
 # Package setup
 # Initiate packages and hard coded variables.
-source("setup.R")
+source("r_setup.R")
 
 # Use roxygen2 comments to document functions in my package
 roxygen2::roxygenise("./AirportAnalysis Package")
@@ -87,8 +87,6 @@ arrival_percentages <- delayed_percentage(arrivals_dd, "arr")
 
 
 
-
-
 # Speedometer style donut chart - key markers at 60 and 70% threshold
 plot_donut_chart(departure_percentages, "Departures")
 plot_donut_chart(arrival_percentages, "Arrivals")
@@ -101,15 +99,17 @@ plot_donut_chart(arrival_percentages, "Arrivals")
 list.files("Shiny/Data/departures")
 list.files("Shiny/Data/arrivals")
 
+# 
+# data1 <- read.csv("Shiny/Data/departures/YYZ_departures_1506_0013.csv")
+# data2 <- read.csv("Shiny/Data/departures/YYZ_departures_1506_0026.csv")
+# 
+# joined <- bind_rows(data1, data2)  %>%
+#          #distinct(.keep_all = TRUE) %>%
+#          arrange(dep_time, airport_name) %>%
+#          filter(airport_name != lag(airport_name, default = "")) %>%
+#          filter(!is.na(airport_name))
 
-data1 <- read.csv("Shiny/Data/departures/YYZ_departures_1506_0013.csv")
-data2 <- read.csv("Shiny/Data/departures/YYZ_departures_1506_0026.csv")
 
-joined <- bind_rows(data1, data2)  %>%
-         #distinct(.keep_all = TRUE) %>%
-         arrange(dep_time, airport_name) %>%
-         filter(airport_name != lag(airport_name, default = "")) %>%
-         filter(!is.na(airport_name))
 
 #### Data Extraction
 
@@ -129,41 +129,6 @@ joined <- bind_rows(data1, data2)  %>%
 # # Example 3: Airline Lookup codes
 # # Match airport code with airport name
 # airlines <- get_airlabs_api_response(key = "airlines")
-
-
-
-
-#### Data Handling
-# For markdown purposes
-
-# Now we have the arrivals and departures data we need, let's carry out some more focused analysis
-# Remember, same flight may be listed for multiple flight providers. Confusing & problematic.
-# Use extract_departures() function - Uses str_detect() to filter on individual days.
-# Remember, only shows 10 Hour period
-
-# Markdown bug - low priority
-
-parameter_value <- "YYZ"
-
-# Select one day worth of data
-departures_lax <- extract_departures(parameter_value = "LAX", date = "2023-06-23") 
-
-
-departures_yyz <- extract_departures(parameter_value = "YYZ", date = "2023-06-14") 
-
-departures_lhr <- extract_departures(parameter_value = "LHR", date = "2023-06-14") 
-
-
-#parameter_value = "LHR" 
-#date = "2023-06-14"
-
-
-
-# Write output to Markdown location for use in our AI genertaed reports
-write.csv(departures_lax, "Markdown/Data/LAX_departures_dd.csv", row.names = F)
-write.csv(departures_yyz, "Markdown/Data/YYZ_departures_dd.csv", row.names = F)
-write.csv(departures_lhr, "Markdown/Data/LHR_departures_dd.csv", row.names = F)
-
-
+#
 
 
